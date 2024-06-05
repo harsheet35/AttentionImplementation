@@ -71,9 +71,11 @@ class TransformerEncoder(nn.Module):
     def __init__(self, hidden_dims: int, feed_forward_dims: int):
         super().__init__()
 
-        self.FeedForward = nn.Sequential([nn.Linear(hidden_dims, feed_forward_dims),
+        self.FeedForward = nn.Sequential(nn.Linear(hidden_dims, feed_forward_dims),
+                                          nn.ReLU(),
                                           nn.Dropout(p = 0.1),
-                                          nn.Linear(feed_forward_dims, hidden_dims)])
+                                          nn.Linear(feed_forward_dims, hidden_dims),
+                                          nn.ReLU())
         self.MultiHeadAttention = MultiHeadScalarAttention()
         
         self.norm = nn.LayerNorm(hidden_dims, hidden_dims)
