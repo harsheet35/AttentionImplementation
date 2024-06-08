@@ -7,9 +7,9 @@ class Transformer_Decoder(nn.Module):
     def __init__(self, d_models: int = 512, num_heads: int = 8, head_dim: int = 64):
         super().__init__()
 
-        self.d_models = d_models
-        self.num_heads = num_heads
-        self.head_dim = head_dim
+        # self.d_models = d_models
+        # self.num_heads = num_heads
+        # self.head_dim = head_dim
 
         self.MSA = MultiHeadScalarAttention(head_dim=head_dim, num_heads=num_heads, d_models=d_models)
         self.Masked_MSA = MaskedMultiHeadAttention(head_dim=head_dim, num_heads=num_heads, d_models=d_models)
