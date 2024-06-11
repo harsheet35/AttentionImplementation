@@ -9,20 +9,6 @@ class InputEmbeddings(nn.Module):
     def forward(self,x):
         return self.embedding(x)*math.sqrt(d_model)
 
-class PositionalEncoding(nn.Module):
-    def __init__(self,d_model:int,seq_len:int,dropout:float):
-        super().__init__()
-        self.dropout=nn.Dropout(dropout)
-        pe=torch.zeros(seq_len,d_model)
-        position=torch.arange(0,seq_len,dtype=torch.float).unsqueeze(1)
-        div_term=torch.exp(torch.arange(0,d_model,2).float()*(-math.log(10000.0)/d_model))
-        pe[:,0::2]=torch.sin(position*div_term)
-        pe[:,1::2]=torch.cos(position*div_term)
-        pe=pe.unsqueeze(0)
-        self.register_buffer('pe',pe)
-    def forward(self,x):
-        x=x+(self.pe[:,:x.shape[1],:]).requires_grad_(False)
-        return self.dropout(x)
 
 class FeedForward(nn.Module):
     def __init__(self,d_model:int, d_ff:int,dropout:float):
@@ -109,3 +95,13 @@ class Decoder(nn.Module):
         for layer in self.layers:
             x=layer(x,encoder_output,src_mask,tgt_mask)
         return self.norm(x)
+
+class FinalLayer(nn.Module):
+    def __init__(self,d_model:int,vocab_size:int):
+        super().__init__()
+        self.final=nn.Linear(d_model,vocab_size)
+    def forward(self,x):
+        return torch.log_softmax(self.final(x),dim=-1)
+
+class TransformerBlock(nn.Module):
+    def __init__(self,)
